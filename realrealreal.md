@@ -51,19 +51,72 @@
 
 ---
 
+💡 **exception vector table**: 여러가지 인터럽트와 예외를 처리할수 있는 주소를 모아놓은 테이블로 모든 컴퓨터 시스템은 예외 처리를 위해 Vector table을 갖는다. (인터럽트도 예외의 일종)
 
+- ARM의 예외
+  
+  - `Reset` : 프로그램의 시작주소, 부트로더가 소스코드를 로드하면 여기로 점프하여 시작
+  
+  - `Prefetch Abort` : 명령어를 해석하다가 실패하는 경우 발생. 메모리에 존재하는 명령어를 읽어오다가 오류가 생기면 발생
+  
+  - `Undefined Instruction` : CPU(CU)가 IR에 있는 명령어를 해석할 수 없는 상황에 발생, 정의되지 않는 코드/포맷에 맞지 않은 코드
+  
+  - `SWI`(Software Interrupt) : 프로그램에서 의도적으로 인터럽트를 발생시키려고 할 때 사용. 소프트웨어 인터럽트라고 함. 시스템 콜의 핵심
+  
+  - `FIQ`, `IRQ` : 외부 인터럽트가 코어에 전달될 때 발생.
 
+**Vector Table의 구성**
 
+| ****Exception****           | **Low Vector** | **High Vector** |
+| --------------------------- | -------------- | --------------- |
+| **Reset**                   | 0x00000000     | 0xFFFF0000      |
+| **Undefined Instruction**   | 0x00000004     | 0xFFFF0004      |
+| **SWI(Software Interrupt)** | 0x00000008     | 0xFFFF0008      |
+| **Abort(Prefetch)**         | 0x0000000c     | 0xFFFF000c      |
+| **Abort(Data)**             | 0x00000010     | 0xFFFF0010      |
+| **Reserved**                | 0x00000014     | 0xFFFF0014      |
+| **IRQ(Interrupt Request)**  | 0x00000018     | 0xFFFF0018      |
+| **FIQ**                     | 0x0000001c     | 0xFFFF001c      |
 
+예외가 발생하면 각 예외를 처리하는 프로그램의 시작주소로 점프
 
+- ARM 프로세서 동작모드
 
+Fast Interrupt Request(FIQ) / Interrupt Request(IRQ) / Supervisor(SVC) / System(SYS) / Undefined(UND) / USER(USR)
 
+| 예외             | 동작모드      |
+| -------------- | --------- |
+| Prefetch Abort | ABT       |
+| Data Abort     | ABT       |
+| FIQ            | FIQ       |
+| IRQ            | IRQ       |
+| Reset          | SVC       |
+| SWI            | SVC       |
+| Undefined      | Undefined |
 
+ABT, FIQ, IRQ, SVC, UND 모드는 exception이 발생할 때 자동으로 변경되는 동작모드,
 
+SYS와 USR는 프로세서의 일반적인 동작 모드
 
+예외가 발생할 경우 해당하는 동작모드로 변경을 하려면 cpsr(Current Program Status Register)의 0~4번 비트를 수정해 주어야 합니다. 전에 3장에서 보았던 LED를 끄고 켤 때 관련된 레지스터의 비트를 수정하는 것과 같습니다.
 
+​
 
+**exception을 ARM에서 처리하는 순서**
 
+1. exception이 발생함.
+
+2. exception 모드의 spsr에 cpsr을 저장함.
+
+3. exception 모드의 lr에 pc값을 저장함.
+
+4. cpsr의 모드 비트를 변경하여, 해당 exception에 대응하는 프로세서 동작 모드로 진입함.
+
+5. pc에 exception 핸들러의 주소를 저장하여 해당 exception에서 해야 할 일을 처리함.
+
+spsr(Saved Program Status Register) : 각 동작모드에 존재하며, exception이 발생하여 cpsr을 변경해야 할 때 이전 모드의 cpsr을 spsr에 백업한다.
+
+링크레지스터(lr) : exception의 처리후 복귀하기 위한 pc의 주소를 저장.
 
 ---
 
@@ -78,8 +131,6 @@
 이 4가지 단계를 묶어서 컴파일 과정, 빌드 과정이라고 부르기도 하고 컴파일 과정과 링킹 과정을 따로 나눠서 부르기도 한다.
 
 보통 빌드 과정은 컴파일 과정보다 넓은 의미(빌드=컴파일+링킹)로 사용되는데 상황에 맞게 이해하면 될 거 같다.
-
-
 
 ##### **1.** **전처리(Pre-processing) 과정**
 
@@ -135,8 +186,6 @@
 
 - **디버깅 정보 섹션(Debugging Information Secion)** : 디버깅에 필요한 정보가 있는 부분
 
-
-
 여기서 중요한 부분은 **심볼 테이블 섹션**과 **재배치 정보 섹션**이다.
 
 심볼(Symbol)은 **함수나 변수를 식별할 때 사용하는 이름**으로 **심볼 테이블(Symbol Table)** 안에는 오브젝트 파일에서 참조되고 있는 심볼 정보(이름과 데이터의 주소 등) 가지고 있다.
@@ -157,8 +206,6 @@
 
 이러한 연결 과정을 `링킹(Linking)`이라 부른다. 
 
-
-
 ##### **4. 링킹(Linking) 과정**
 
 <img src="https://blog.kakaocdn.net/dn/dW1GTK/btrdqLirXQS/upv8Q3omleeiAIGGPlCJdk/img.png" title="" alt="" width="383">
@@ -166,8 +213,6 @@
 **링킹(Linking) 과정**은 링커(Linker)를 통해 오브젝트 파일(*.o)들을 묶어 실행 파일로 만드는 과정이다.
 
 이 과정에서 **오브젝트 파일들**과 프로그램에서 사용하는 **라이브러리 파일들**을 **링크**하여 **하나의 실행 파일**을 만든다.
-
-
 
 💡 **링커의 역할**
 
@@ -195,8 +240,4 @@
 
 링킹을 하기 전 오브젝트 파일을 `배치 가능한 오브젝트 파일(Relocatable Object File)`이라 부르고 링킹을 통해 만들어지는 오브젝트 파일을 `실행 가능한 오브젝트 파일(Executable Object File)`이라 부른다.
 
-
-
 ※ 컴파일 과정 동안 연쇄적으로 사용하는 개발 도구들(전처리기-컴파일러-어셈블리-링커)을 묶어서 `툴체인(Toolchain)`이라고도 부른다.
-
-
