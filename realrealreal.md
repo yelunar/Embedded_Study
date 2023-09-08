@@ -19,12 +19,15 @@
 
 .c .h .s .o
 
-
 🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐🧐
 
 흐름 ㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇㅇ
 
 - 그림 다시 내가 그리기
+
+<br>
+
+## 세미나 목차
 
 **1. ARM 개념과 기본 구조**
 
@@ -52,11 +55,11 @@
   
   이 코드는 ARM 코어에서 실행됨
 
-- **소스 코드**: 응용 프로그램 or 운영 체제의 실제 코드
+- vector table
 
 <--->
 
-빌드해서 exe로 된게 부트로더랑 스타트업 코드임 
+빌드해서 exe로 된게 부트로더랑 스타트업 코드!
 
 **3. 빌드 시스템 (Build System) 및 메모리 맵 (Memory Map)**
 
@@ -65,6 +68,8 @@
 - **메모리 맵**: 메모리 맵은 시스템의 메모리 주소 공간을 묘사하는 맵입니다. 이 맵은 각 메모리 주소에 어떤 데이터 또는 코드가 위치하는지를 정의
   
   또한 메모리 맵은 특정 주소 범위를 특정 용도(코드, 데이터, 스택, 힙 등)로 할당하는 데 사용됨
+
+[[Embedded] MCU가 main()을 실행하는 과정 (feat. Vector Table)](https://www.varofla.com/aaccff24-99ff-4c96-b7e4-30f852d4c16d)
 
 <br>
 
@@ -82,7 +87,7 @@
   
   - ARM 아키텍처는 32비트와 64비트 버전으로 나눠지며, 32비트 아키텍처는 ARMv7-A, ARMv7-R, ARMv7-M과 같이 다양한 프로파일이 있습니다. 64비트 아키텍처는 ARMv8-A로 알려져 있음
   
-  -  ARM 아키텍처는 주로 **A-시리즈**, **M-시리즈**, **R-시리즈**로 나누어진다
+  - ARM 아키텍처는 주로 **A-시리즈**, **M-시리즈**, **R-시리즈**로 나누어진다
     
     [ARM Cortex A/R/M 및 관련 라이브러리 정리](https://pus0319.github.io/embedded_firmware/ARM_Cortex_lib/) 
     
@@ -90,39 +95,39 @@
     
     ```
     1. Cortex-A가 들어있는 MCU의 경우는 PC나 스마트폰과 같은 
-       OS(Linux 등)가 들어가고 하이엔드 Quality로 만들어야하는 Application에 쓰입니다.
-      - Cortex Series 중에서 가장 뛰어난 Spec임을 알 수 있습니다.
-      - 주 기능
-        - 고성능 멀티미디어 지원
-        - 메모리 관리 장치(MMU) : 리눅스와 같은 운영체제 사용 가능
-        - 캐시메모리
-        - ARM TrustZone 보안 : CPU Core의 보안 기능 추가(CPU mode 세분화)
-          -> 탄생 배경 : ARM MCU 원칩으로 네트워크(TCP/IP) 기능 탑재 
-                         -> 외부 해킹에 취약한 문제 발견.  
-      - A : Application 의 약자
+      OS(Linux 등)가 들어가고 하이엔드 Quality로 만들어야하는 Application에 쓰입니다.
+     - Cortex Series 중에서 가장 뛰어난 Spec임을 알 수 있습니다.
+     - 주 기능
+       - 고성능 멀티미디어 지원
+       - 메모리 관리 장치(MMU) : 리눅스와 같은 운영체제 사용 가능
+       - 캐시메모리
+       - ARM TrustZone 보안 : CPU Core의 보안 기능 추가(CPU mode 세분화)
+         -> 탄생 배경 : ARM MCU 원칩으로 네트워크(TCP/IP) 기능 탑재 
+                        -> 외부 해킹에 취약한 문제 발견.  
+     - A : Application 의 약자
     ```
     
     ```
     2. Cortex-R이 들어있는 MCU의 경우는 Automative(자동화),자동차 의료,LTE 베이스 밴드 모뎀 등의 
-       Real-time Application에 쓰입니다.(단, MMU를 지원하지 않기 때문에 일반적인 OS는 올릴 수 없음.)
-      - 주 기능
-        - Low latency interrupt system
-        - 메모리 보호 장치(MPU)
-        - 캐시메모리
-        - 밀착 결합 메모리(Tightly Coupled Memory)
-      - R : Real-time Application의 약자 
+      Real-time Application에 쓰입니다.(단, MMU를 지원하지 않기 때문에 일반적인 OS는 올릴 수 없음.)
+     - 주 기능
+       - Low latency interrupt system
+       - 메모리 보호 장치(MPU)
+       - 캐시메모리
+       - 밀착 결합 메모리(Tightly Coupled Memory)
+     - R : Real-time Application의 약자 
     ```
     
     ```
     3. Cortex-M이 들어있는 MCU의 경우는 PIC,AVR과 같은(8,16bit) 소형 마이크로프로세서 Target에 쓰입니다.
-      - 주 기능
-        - 초저전력(Low Power)
-        - Low latency interrupt system
-        - 메모리 보호 장치(MPU)
-        - 중첩 벡터형 인터럽트 컨트롤러(NVIC)
-        - Wake up 인터럽트 컨트롤러(WIC)
-        - 최신 ARM TrustZone 보안(M23,M33만 해당)
-      - M : MircoController의 약자 
+     - 주 기능
+       - 초저전력(Low Power)
+       - Low latency interrupt system
+       - 메모리 보호 장치(MPU)
+       - 중첩 벡터형 인터럽트 컨트롤러(NVIC)
+       - Wake up 인터럽트 컨트롤러(WIC)
+       - 최신 ARM TrustZone 보안(M23,M33만 해당)
+     - M : MircoController의 약자 
     ```
     
     | ARM Cortex-**M** (Microcontroller) | - **저가형 응용프로그램**에 최적화된 임베디드 프로세서 계열  <br>- Thumb2 명령어 세트 지원                        |
@@ -147,6 +152,108 @@
   - 전체 모바일 기기의 95%에 ARM 코어가 들어감 > AP설계
 
 ---
+
+Embedded Target Board에서 부팅되는 기본 절차는 다음과 같다
+
+1. Boot code를 통한 하드웨어 셋팅
+
+2. CRT(C-Runtime) Startup Code 실행
+
+3. main()으로 branch하여 application 수행
+
+여기서 Boot code와 Startup code를 합쳐서 Boot Loader라고 부른다.
+
+Startup Code에서 하는 일은
+
+- 스타트업 코드는 부트로더 이후 실행, 프로세서 초기화 및 시스템 초기화 작업을 담당
+
+- 스타트업 코드는 주로 벡터 테이블의 주소를 확인하고, 예외 처리 루틴 설정, CPU 초기화, 메모리 초기화 등의 작업을 수행.
+
+- 스타트업 코드는 초기화 작업이 완료된 후, 보통 메인 애플리케이션 또는 운영 체제의 진입 지점으로 제어를 넘기는 역할.
+1. Disable all interrupts.   
+        모든 인터럽트 중지.  
+
+2.  Copy any initialized data from ROM to RAM.   
+        ROM으로부터 RAM으로 초기화된 데이터 복사.  
+
+3. Zero the uninitialized data area.   
+        초기화되지 않은 데이터 영역을 0으로.
+
+4.  Allocate space for and initialize the stack.   
+        스택을 위한 공간을 할당하고 초기화.  
+
+5.  Initialize the processor's stack pointer.   
+        프로세서의 스택 포인터를 초기화.  
+
+6. Create and initialize the heap.   
+        힙을 생성하고 초기화.
+
+7.  Execute the constructors and initializers for all global variables (C++ only).   
+        모든 전역 변수들에 대해 생성자들과 초기화들을 수행 (C++만 해당).
+
+8. Enable interrupts.   
+        인터럽트 활성화.  
+
+9. Call main.   
+        main함수 호출.
+
+### Boot Sequence
+
+![](https://user-images.githubusercontent.com/34755287/53879645-5a6b7b00-4052-11e9-84ad-25a4dc7c1306.png)
+
+### **1. 컴퓨터가 처음에 켜지면?**
+
+컴퓨터가 켜지자마자 메인보드에 내장된 부품인 **ROM**을 자동으로 읽어서 해야 할 일들을 하나씩 수행한다. 그래서 가장 먼저 ROM에 기본으로 설치되어 있는 **BIOS**를 읽어들인다. 
+
+**BIOS**는 <u>운영 체제 중 가장 기본적인 소프트웨어이자 컴퓨터의 입출력을 처리하는 펌웨어</u>로 메인보드에 필수로 내장되어 있다.
+
+- **펌웨어(펌 소프트웨어)**: 변경할 필요가 없는 소프트웨어를 **ROM에 내장**하여 <u>하드웨어를 제어하는 프로그램</u>
+
+![](https://blog.kakaocdn.net/dn/bDiUUy/btrqzQZGi40/SC4sW9ae5gKkFIevytcap0/img.png)*메인보드 제조사의 BIOS 초기 화면*
+
+### **1.2. BIOS: POST, Boot Loader**
+
+`BIOS`: Basic Input and Output System의 줄임말로 기본적인 입출력을 담당하는 기계어 루틴, 컴퓨터 하드웨어와 운영체제를 연결하는 역할을 함
+
+**BIOS**는 부팅 과정 중 컴퓨터에 연결된 키보드, 램, 디스크 드라이브 등의 하드웨어가 올바로 작동하는지 각종 테스트나 초기화를 하는 **POST**(Power On Self Test)를 진행한다. 
+
+BIOS는 **POST**를 성공적으로 마치면 <u>하드디스크에 저장된 운영체제를 메인 메모리에 적재</u>하는 **Boot Loader**를 실행시킨다. CPU가 곧바로 읽어들여야 하기 때문에 Boot Loader는 처음부터 Main Memory(DRAM)에 상주해있다. 
+
+**부트 로더**를 잘못 건드리면 OS가 실행이 되지 않기 때문에 건드리지 못하게 Memory 안에서도 **ROM**(Read Only Memory)라는 영역에 할당되어 있다.
+
+Boot Loader와 달리 **운영체제**는 하드디스크에 저장되어 있기 때문에 누군가가 **메모리로 로드**를 해줘야 한다. 그래서 초기에는 스토리지(HDD, SSD)에 OS 프로그램이 있다가 **Boot Loader**에 의해 하드디스크에 저장되어 있는 <u>OS(window or Linux)가 메인 메모리(RAM)에 올라가게 된다.</u> 이러한 부트로더의 과정을 `부팅` 이라고 한다.
+
+이제 **메모리**에 올라간 OS 프로그램을 **CPU**가 읽어들이면서 **OS를 실행**하고 부팅 과정을 마치게 된다.
+
+- **부팅**: PC가 켜진 후에 **운영체제를 메인 메모리(DRAM)에 적재하는 일련의 과정**
+
+즉, 부트로더의 역할은 !
+
+- 임베디드 보드의 전원을 켰을 때, 플래시 메모리(ROM)에서 시작되는 시스템 소프트웨어로서 하드웨어를 초기화 시켜 주고, 커널을 메모리(RAM)에 적재(복사)시켜서 사용자 명령 처리를 준비하는 역할을 한다.
+
+![](https://user-images.githubusercontent.com/34755287/53879648-5b041180-4052-11e9-9642-6bf80de33a3e.png)
+
+운영체제는 크게 **커널**(kernel)과 **명령어 해석기**(Command interpreter, shell)로 나뉜다.
+
+- 커널은 말그대로 운영체제의 핵심으로 **운영체제가 수행하는 모든 것**이 저장되어있다.
+
+- 명령어 해석기는 사용자가 **커널(운영체제)에 요청하는 명령어를 해석하여 커널에 요청하고 그 결과를 출력**한다.
+
+### **1.3. 프로그램 실행 원리: CPU, 메모리**
+
+![](https://blog.kakaocdn.net/dn/ccMr9D/btrqGqUiS1f/oPk9cywmcKbh7HpkkmKBg1/img.png)
+
+**CPU**는 <u>프로그램(명령어의 집합)을 메인 메모리(DRAM)에서만 가져와 처리</u>할 수 있기 때문에 프로그램을 실행하려면 반드시 프로그램이 메모리에 할당되어 있어야 한다. 
+
+보조기억장치(HDD, SSD)에 있던 운영체제는 **ROM**에 있는 **부트 로더**가 <u>메모리에 적재</u>해주었지만, 다른 응용 프로그램(게임, 워드 등)들은 어떻게 메인 메모리에 적재할 수 있는 걸까?
+
+바로 운영체제의 **커널**이 그 역할을 해준다. 
+
+**커널**은 💡전원이 켜져 있는 동안에는 **메인 메모리에 계속 상주**하면서 시스템 자원을 관리한다. **커널**이 <u>응용 프로그램이나 데이터를 메인 메모리에 적재</u>하는 것을 로드(Load)라고 하며 그 과정을 로딩이라고 한다.
+
+프로그램이 메모리에 적재되면 비로소 **CPU**는 메모리에 있는 <u>프로그램 명령어들을 읽어와 실행</u>을 한다.
+
+<br>
 
 💡 **exception vector table**: 여러가지 인터럽트와 예외를 처리할수 있는 주소를 모아놓은 테이블로 모든 컴퓨터 시스템은 예외 처리를 위해 Vector table을 갖는다. (인터럽트도 예외의 일종)
 
