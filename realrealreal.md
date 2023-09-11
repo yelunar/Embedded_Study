@@ -33,7 +33,7 @@
 
 - **ARM (Advanced RISC Machine)**: ARM은 "Advanced RISC Machine"의 약어로, RISC(Reduced Instruction Set Computer) 아키텍처를 기반으로 하는 마이크로프로세서 및 디자인 회사
   
-  ARM 프로세서는 저전력 소비, 높은 성능, 모듈러 디자인 등으로 많이 사용된다. 
+  ARM 프로세서는 저전력 소비, 높은 성능, 모듈러 디자인 등으로 많이 사용된다.
   
   ARM 아키텍처는 주로 **A-시리즈**, **M-시리즈**, **R-시리즈**로 나누어진다.
   
