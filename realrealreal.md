@@ -176,7 +176,7 @@ Startup Code에서 하는 일은
 2.  Copy any initialized data from ROM to RAM.   
         ROM으로부터 RAM으로 초기화된 데이터 복사.  
 
-3. Zero the uninitialized data area.   
+3. dZero the uninitialized data area.   
         초기화되지 않은 데이터 영역을 0으로.
 
 4.  Allocate space for and initialize the stack.   
@@ -225,7 +225,7 @@ Boot Loader와 달리 **운영체제**는 하드디스크에 저장되어 있�
 
 이제 **메모리**에 올라간 OS 프로그램을 **CPU**가 읽어들이면서 **OS를 실행**하고 부팅 과정을 마치게 된다.
 
-- **부팅**: PC가 켜진 후에 **운영체제를 메인 메모리(DRAM)에 적재하는 일련의 과정**
+- **부팅**: PC가 켜진 후에 **운영체제를 메인 메모리에 적재하는 일련의 과정**
 
 즉, 부트로더의 역할은 !
 
